@@ -1,0 +1,74 @@
+---
+- name: Pulga Final Exam
+  hosts: all
+  gather_facts: True
+
+  tasks: 
+    - name: Clone Prelim Exam repository
+      include_role:
+        name:  git-clone
+  
+    - name: Install and configure one enterprise service (MariaDB)
+      include_role:
+        name: package-ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: mariadb-server
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+- name: Install and configure one monitoring tool (Nagios)
+  hosts: all
+
+  tasks:
+    - name: Include variable
+      include_vars:
+        file: config.yaml
+
+    - name: Install nagios packages for Ubuntu
+      include_role:
+        name: package-ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package:
+          - autoconf
+          - gcc
+          - libc6
+          - make
+          - wget
+          - libssl-dev
+          - gawk
+          - dc
+          - build-essential
+          - snmp
+          - libnet-snmp-perl
+          - gettext
+          - unzip
+          - apache2
+          - php
+          - libapache2-mod-php7.4
+          - libgd-dev
+          - python3
+          - python3-pip
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Configure nagios   
+      include_role:
+        name: nagios
+      when: ansible_facts['distribution'] == 'Ubuntu'         
+
+- name: Change MOTD
+  hosts: all
+  
+  tasks:
+    - name: Include variable
+      include_vars:
+        file: config.yaml
+     
+    - name: Changing MOTD on Ubuntu
+      include_role:
+        name: motd
+      when: ansible_facts['distribution'] == 'Ubuntu'

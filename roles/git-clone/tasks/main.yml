@@ -1,0 +1,10 @@
+---
+# tasks file for git-clone
+
+- name: Cloning Prelim Exam on Ubuntu
+  git:
+    repo: https://github.com/qjrdpulga/Pulga_PrelimExam.git
+    dest: /home/justinpulga/pulga_prelim
+    clone: yes
+    update: yes
+  when: ansible_facts['distribution'] == 'Ubuntu'
